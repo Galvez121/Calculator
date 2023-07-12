@@ -32,7 +32,20 @@ keys.addEventListener("click", function (evt) {
       action === "multiply" ||
       action === "divide"
     ) {
-      key.classList.add("is-depressed");
+      calculator.dataset.previousKeyType = "operator";
+
+      calculator.dataset.firstValue = displayNum;
+      calculator.dataset.operator = action;
+    }
+
+    const previousKeyType = calculator.dataset.previousKeyType;
+
+    if (!action) {
+      if (displayNum === "0" || previousKeyType === "operator") {
+        display.textContent = keyContent;
+      } else {
+        display.textContent = displayNum + keyContent;
+      }
     }
 
     // When clicking the decimal
@@ -44,8 +57,29 @@ keys.addEventListener("click", function (evt) {
       console.log("clear key!");
     }
 
+    // Calculate the result function
+    const calculate = (n1, operator, n2) => {
+      let result = "";
+
+      if (operator === "add") {
+        result = parseFloat(n1) + parseFloat(n2);
+      } else if (operator === "subtract") {
+        result = parseFloat(n1) - parseFloat(n2);
+      } else if (operator === "multiply") {
+        result = parseFloat(n1) * parseFloat(n2);
+      } else if (operator === "divide") {
+        result = parseFloat(n1) / parseFloat(n2);
+      }
+
+      return result;
+    };
+
     if (action === "calculate") {
-      console.log("equal key!");
+      const firstValue = calculator.dataset.firstValue;
+      const operator = calculator.dataset.operator;
+      const secondValue = displayNum;
+
+      display.textContent = calculate(firstValue, operator, secondValue);
     }
   }
 });
